@@ -21,7 +21,7 @@ stages:
     workspace:
       clean: all # ?
     steps:
-      - script: |
+      - bash: |
           curl -fsSL https://get.docker.com | sh
           echo '{"experimental":"enabled"}' | sudo tee /etc/docker/daemon.json
           mkdir -p $HOME/.docker
@@ -29,8 +29,8 @@ stages:
           sudo service docker start
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           docker buildx create --name xbuilder --use
-          echo "$env:REGISTRY_PASS" | docker login -u $env:REGISTRY_USER --password-stdin
-          echo "user: $env:REGISTRY_USER"
+          echo "$REGISTRY_PASS" | docker login -u $REGISTRY_USER --password-stdin
+          echo "user: $REGISTRY_USER"
           echo "Building multi arch and pushing testing"
           ./deploy.sh
         env:
