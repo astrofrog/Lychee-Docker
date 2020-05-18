@@ -1,0 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+- azure
+
+pr:
+- master
+- azure
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: build
+  jobs:
+  - job: build
+    workspace:
+      clean: all # ?
+    steps: |
+      curl -fsSL https://get.docker.com | sh
+      echo '{"experimental":"enabled"}' | sudo tee /etc/docker/daemon.json
+      mkdir -p $HOME/.docker
+      echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
+      sudo service docker start
+      docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      docker buildx create --name xbuilder --use
+      echo "$REGISTRY_PASS" | docker login -u $REGISTRY_USER --password-stdin
+      echo "Building multi arch and pushing testing"
+      ./deploy.sh
