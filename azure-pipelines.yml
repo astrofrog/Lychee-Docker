@@ -40,10 +40,10 @@ stages:
           TRAVIS_BUILD_STAGE_NAME="$AGENT_JOBNAME"
           if echo "$BUILD_SOURCEBRANCH" | grep "^refs/tags/" ; then TRAVIS_TAG="$BUILD_SOURCEBRANCH" ; fi
           TRAVIS_BRANCH=BUILD_SOURCEBRANCH
-          if [ -z "$SYSTEM_PULLREQUEST_PULLREQUESTNUMBER" ] ; then TRAVIS_PULL_REQUEST="false" ; fi
+          if [ -z "$BUILD_REASON" = "PullRequest" ] ; then TRAVIS_PULL_REQUEST="false" ; fi
           echo "TRAVIS_BUILD_STAGE_NAME: $TRAVIS_BUILD_STAGE_NAME  AGENT_JOBNAME: $AGENT_JOBNAME  TRAVIS_BRANCH=BUILD_SOURCEBRANCH: $BUILD_SOURCEBRANCH"
           echo "TRAVIS_TAG: $TRAVIS_TAG  SYSTEM_PULLREQUEST_PULLREQUESTNUMBER: $SYSTEM_PULLREQUEST_PULLREQUESTNUMBER  TRAVIS_PULL_REQUEST: $TRAVIS_PULL_REQUEST"
-          ./deploy.sh
+          source ./deploy.sh
         env:
           REGISTRY_USER: $(registry_user)
           REGISTRY_PASS: $(registry_pass)
