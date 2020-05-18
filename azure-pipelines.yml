@@ -34,5 +34,5 @@ stages:
           echo "Building multi arch and pushing testing"
           ./deploy.sh
         env:
-          REGISTRY_USER: $(REGISTRY_USER)
-          REGISTRY_PASS: $(REGISTRY_PASS)
+          REGISTRY_USER: $(registry_user)
+          REGISTRY_PASS: $(registry_pass)
