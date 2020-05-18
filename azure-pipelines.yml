@@ -29,8 +29,8 @@ stages:
           sudo service docker start
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           docker buildx create --name xbuilder --use
-          echo "$REGISTRY_PASS" | docker login -u $REGISTRY_USER --password-stdin
-          echo "user: $REGISTRY_USER"
+          echo "$env:REGISTRY_PASS" | docker login -u $env:REGISTRY_USER --password-stdin
+          echo "user: $env:REGISTRY_USER"
           echo "Building multi arch and pushing testing"
           ./deploy.sh
         env:
