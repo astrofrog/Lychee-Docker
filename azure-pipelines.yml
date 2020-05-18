@@ -14,6 +14,11 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  NAME: 'lychee'
+  DOCKER_REPO: 'lycheeorg/lychee'
+  OLD_DOCKER_REPO: 'lycheeorg/lychee-laravel'
+
 stages:
 - stage: build
   jobs:
@@ -32,6 +37,10 @@ stages:
           echo "$REGISTRY_PASS" | docker login -u $REGISTRY_USER --password-stdin
           echo "user: $REGISTRY_USER"
           echo "Building multi arch and pushing testing"
+          TRAVIS_BUILD_STAGE_NAME="$AGENT_JOBNAME"
+          if echo "$BUILD_SOURCEBRANCH" | grep "^refs/tags/" ; then TRAVIS_TAG="$BUILD_SOURCEBRANCH" ; fi
+          TRAVIS_BRANCH=BUILD_SOURCEBRANCH
+          if [ -z "$SYSTEM_PULLREQUEST_PULLREQUESTNUMBER" ] ; then TRAVIS_PULL_REQUEST="false" ; fi
           ./deploy.sh
         env:
           REGISTRY_USER: $(registry_user)
